@@ -1,0 +1,66 @@
+<turbo-frame id="modal">
+  <div style="position:fixed; inset:0; background:rgba(0,0,0,.35); display:flex; align-items:flex-end;">
+    <div style="background:#fff; width:100%; border-radius:16px 16px 0 0; padding:16px; max-height:82vh; overflow:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <strong>種目一覧（有名どころ順）</strong>
+        <%= link_to "戻る",
+            workout_session_exercises_picker_path(@workout_session, replace_workout_exercise_id: @replace_workout_exercise_id),
+            data: { turbo_frame: "modal" } %>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div style="font-size:12px; color:#666; margin-bottom:6px;">器具フィルタ</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <%= link_to "すべて",
+              workout_session_exercises_by_body_part_path(@workout_session, params[:body_part], replace_workout_exercise_id: @replace_workout_exercise_id, difficulty: @selected_difficulty),
+              data: { turbo_frame: "modal" },
+              style: "border:1px solid #{@selected_equipment.nil? ? '#333' : '#ddd'}; border-radius:999px; padding:4px 10px; text-decoration:none;" %>
+          <% @equipment_filters.each do |equipment| %>
+            <%= link_to equipment,
+                workout_session_exercises_by_body_part_path(@workout_session, params[:body_part], equipment: equipment, difficulty: @selected_difficulty, replace_workout_exercise_id: @replace_workout_exercise_id),
+                data: { turbo_frame: "modal" },
+                style: "border:1px solid #{@selected_equipment == equipment ? '#333' : '#ddd'}; border-radius:999px; padding:4px 10px; text-decoration:none;" %>
+          <% end %>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div style="font-size:12px; color:#666; margin-bottom:6px;">難易度</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <%= link_to "すべて",
+              workout_session_exercises_by_body_part_path(@workout_session, params[:body_part], equipment: @selected_equipment, replace_workout_exercise_id: @replace_workout_exercise_id),
+              data: { turbo_frame: "modal" },
+              style: "border:1px solid #{@selected_difficulty.nil? ? '#333' : '#ddd'}; border-radius:999px; padding:4px 10px; text-decoration:none;" %>
+          <% { 1 => "初心者向け", 2 => "中級", 3 => "上級" }.each do |difficulty, label| %>
+            <%= link_to label,
+                workout_session_exercises_by_body_part_path(@workout_session, params[:body_part], equipment: @selected_equipment, difficulty: difficulty, replace_workout_exercise_id: @replace_workout_exercise_id),
+                data: { turbo_frame: "modal" },
+                style: "border:1px solid #{@selected_difficulty == difficulty ? '#333' : '#ddd'}; border-radius:999px; padding:4px 10px; text-decoration:none;" %>
+          <% end %>
+        </div>
+      </div>
+
+      <div style="margin-top:12px; display:grid; gap:8px;">
+        <% @exercises.each do |ex| %>
+          <div style="border:1px solid #eee; border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:bold;"><%= ex.name %></div>
+              <div style="font-size:12px; color:#666;">
+                <%= ex.body_part_label %> / <%= ex.equipment.join(", ") %> / 難易度<%= ex.difficulty %> / <%= ex.category %>
+              </div>
+            </div>
+
+            <%= button_to(@replace_workout_exercise_id.present? ? "置き換え" : "追加",
+                workout_session_workout_exercises_path(
+                  @workout_session,
+                  exercise_id: ex.id,
+                  replace_workout_exercise_id: @replace_workout_exercise_id
+                ),
+                method: :post,
+                form: { data: { turbo_stream: true } }) %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</turbo-frame>

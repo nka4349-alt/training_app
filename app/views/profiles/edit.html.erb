@@ -1,0 +1,103 @@
+<h1><%= @onboarding ? "プロフィール設定" : "Settings" %></h1>
+
+<%= form_with model: @profile, url: profile_path, method: :patch do |f| %>
+  <% if @onboarding %>
+    <%= hidden_field_tag :complete_onboarding, "1" %>
+  <% end %>
+
+  <section class="screen-card" style="display:grid; gap:12px;">
+    <div>
+      <div style="font-size:12px; color:#666;">目的</div>
+      <div class="chip-group" style="margin-top:6px;">
+        <% Profile.goals.keys.each do |goal| %>
+          <label class="chip <%= @profile.goal == goal ? 'active' : '' %>">
+            <%= f.radio_button :goal, goal, style: "display:none;" %>
+            <%= { "hypertrophy" => "筋肥大", "strength" => "筋力", "fat_loss" => "減量" }[goal] %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:12px; color:#666;">経験</div>
+      <div class="chip-group" style="margin-top:6px;">
+        <% Profile.experiences.keys.each do |experience| %>
+          <label class="chip <%= @profile.experience == experience ? 'active' : '' %>">
+            <%= f.radio_button :experience, experience, style: "display:none;" %>
+            <%= { "beginner" => "初心者", "intermediate" => "中級", "advanced" => "上級" }[experience] %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:12px; color:#666;">頻度（週）</div>
+      <div class="chip-group" style="margin-top:6px;">
+        <% (2..6).each do |freq| %>
+          <label class="chip <%= @profile.frequency_per_week == freq ? 'active' : '' %>">
+            <%= f.radio_button :frequency_per_week, freq, style: "display:none;" %>
+            <%= freq %>回
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:12px; color:#666;">単位</div>
+      <div class="chip-group" style="margin-top:6px;">
+        <% Profile.units.keys.each do |unit| %>
+          <label class="chip <%= @profile.unit == unit ? 'active' : '' %>">
+            <%= f.radio_button :unit, unit, style: "display:none;" %>
+            <%= unit %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:12px; color:#666;">重量ステップ</div>
+      <div class="chip-group" style="margin-top:6px;">
+        <% [1.25, 2.5, 5.0].each do |step| %>
+          <label class="chip <%= @profile.weight_step.to_f == step ? 'active' : '' %>">
+            <%= f.radio_button :weight_step, step, style: "display:none;" %>
+            <%= step %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:12px; color:#666;">器具</div>
+      <%= hidden_field_tag "profile[available_equipment][]", "" %>
+      <div class="chip-group" style="margin-top:6px;">
+        <% { "barbell" => "バーベル", "dumbbell" => "ダンベル", "machine" => "マシン", "cable" => "ケーブル", "bodyweight" => "自重" }.each do |value, label| %>
+          <label class="chip <%= @profile.available_equipment.include?(value) ? 'active' : '' %>">
+            <%= check_box_tag "profile[available_equipment][]", value, @profile.available_equipment.include?(value), id: "profile_equipment_#{value}" %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen-card" style="display:grid; gap:10px; margin-top:12px;">
+    <h2 style="font-size:16px;">入力UI設定</h2>
+    <label><%= f.check_box :show_rpe %> RPE表示</label>
+    <label><%= f.check_box :copy_rpe_from_previous %> RPEを前回からコピーする</label>
+    <label><%= f.check_box :auto_focus_next_done %> Doneで次セットにフォーカス</label>
+    <label><%= f.check_box :auto_start_rest_timer %> Doneで休憩タイマー開始</label>
+    <label><%= f.check_box :continuous_add_exercises %> 種目追加後も選択画面を閉じない</label>
+
+    <div>
+      <div style="font-size:12px; color:#666;">デフォルト休憩秒数</div>
+      <%= f.number_field :default_rest_seconds, min: 30, max: 600, step: 15, style: "margin-top:4px; width:120px;" %>
+    </div>
+  </section>
+
+  <div style="display:flex; gap:8px; margin-top:14px;">
+    <%= f.submit(@onboarding ? "開始" : "保存") %>
+    <% unless @onboarding %>
+      <%= button_to "Logout", session_path, method: :delete %>
+    <% end %>
+  </div>
+<% end %>

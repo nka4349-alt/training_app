@@ -1,0 +1,60 @@
+<% ex = workout_exercise.exercise %>
+<% all_done = workout_exercise.set_entries.all?(&:done?) %>
+
+<div id="<%= dom_id(workout_exercise) %>" style="border:1px solid <%= all_done ? '#9ad4aa' : '#ddd' %>; border-radius:12px; padding:12px; background:<%= all_done ? '#f2fff5' : '#fff' %>;">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div>
+      <div style="font-weight:bold; font-size:18px;">
+        <%= ex.name %>
+        <% if all_done %>
+          <span style="font-size:12px; color:#1b7f34;">完了</span>
+        <% end %>
+      </div>
+      <div style="font-size:12px; color:#666;">
+        <%= workout_exercise.rep_range_min %>–<%= workout_exercise.rep_range_max %>回 × <%= workout_exercise.target_sets %>セット ・休憩<%= workout_exercise.rest_seconds %>s
+      </div>
+      <div style="font-size:11px; color:#888;">おすすめ: 目標レンジと休憩は自動適用済み</div>
+    </div>
+
+    <% unless workout_exercise.workout_session.finished_at %>
+      <div style="display:flex; gap:6px; align-items:center;">
+        <%= link_to "入替",
+            workout_session_exercises_picker_path(
+              workout_exercise.workout_session,
+              replace_workout_exercise_id: workout_exercise.id
+            ),
+            data: { turbo_frame: "modal" },
+            style: "font-size:12px; border:1px solid #ccc; border-radius:999px; padding:4px 8px; text-decoration:none;" %>
+        <%= button_to "削除",
+            workout_session_workout_exercise_path(workout_exercise.workout_session, workout_exercise),
+            method: :delete,
+            form: { data: { turbo_confirm: "この種目を削除しますか？" } } %>
+      </div>
+    <% end %>
+  </div>
+
+  <div style="margin-top:10px; display:grid; gap:8px;">
+    <% workout_exercise.set_entries.order(:set_no).each do |set_entry| %>
+      <%= render "workout_sessions/set_row", set_entry: set_entry, workout_exercise: workout_exercise, profile: profile %>
+    <% end %>
+  </div>
+
+  <% unless workout_exercise.workout_session.finished_at %>
+    <div style="display:flex; gap:8px; margin-top:10px;">
+      <%= button_to "おすすめに戻す",
+          restore_plan_workout_session_workout_exercise_path(workout_exercise.workout_session, workout_exercise),
+          method: :post,
+          form: { data: { turbo_stream: true } } %>
+
+      <%= button_to "＋セット（直前コピー）",
+          add_set_workout_session_workout_exercise_path(workout_exercise.workout_session, workout_exercise),
+          method: :post,
+          form: { data: { turbo_stream: true } } %>
+
+      <%= button_to "1セット目重量を全セットへ",
+          apply_first_weight_workout_session_workout_exercise_path(workout_exercise.workout_session, workout_exercise),
+          method: :patch,
+          form: { data: { turbo_stream: true } } %>
+    </div>
+  <% end %>
+</div>

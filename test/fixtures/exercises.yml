@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  primary_body_part: MyString
+  category: MyString
+  difficulty: 1
+  popularity_rank: 1
+  defaults_by_goal: 
+
+two:
+  name: MyString
+  primary_body_part: MyString
+  category: MyString
+  difficulty: 1
+  popularity_rank: 1
+  defaults_by_goal: 

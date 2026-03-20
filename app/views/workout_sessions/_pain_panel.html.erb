@@ -1,0 +1,49 @@
+<div id="pain_panel" style="border:1px solid #f0d5d5; background:#fff8f8; border-radius:12px; padding:10px; margin-bottom:12px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+    <strong style="font-size:14px;">痛み・違和感</strong>
+    <span style="font-size:11px; color:#666;">中/重は種目候補の順位に反映</span>
+  </div>
+
+  <% unless workout_session.finished_at %>
+    <%= form_with model: PainLog.new,
+        url: workout_session_pain_logs_path(workout_session),
+        method: :post,
+        data: { turbo_stream: true },
+        style: "display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:8px;" do |f| %>
+
+      <%= f.select :body_part,
+          Exercise::BODY_PARTS.map { |bp| [Exercise::BODY_PART_LABELS[bp] || bp, bp] },
+          {},
+          style: "padding:6px;" %>
+
+      <% PainLog.severities.each_key do |severity| %>
+        <label style="font-size:12px;">
+          <%= f.radio_button :severity, severity, checked: severity == "light" %>
+          <%= { "light" => "軽", "moderate" => "中", "severe" => "重" }[severity] %>
+        </label>
+      <% end %>
+
+      <%= f.submit "記録", style: "padding:6px 10px;" %>
+    <% end %>
+  <% end %>
+
+  <% if workout_session.pain_logs.any? %>
+    <div style="margin-top:8px; display:grid; gap:6px;">
+      <% workout_session.pain_logs.order(created_at: :desc).each do |pain_log| %>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; background:#fff; border:1px solid #f0dede; border-radius:10px; padding:6px 8px;">
+          <span>
+            <strong><%= Exercise::BODY_PART_LABELS[pain_log.body_part] || pain_log.body_part %></strong> /
+            <%= { "light" => "軽", "moderate" => "中", "severe" => "重" }[pain_log.severity] %>
+          </span>
+
+          <% unless workout_session.finished_at %>
+            <%= button_to "削除",
+                workout_session_pain_log_path(workout_session, pain_log),
+                method: :delete,
+                form: { data: { turbo_stream: true } } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

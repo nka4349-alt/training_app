@@ -1,0 +1,11 @@
+<% if @append_mode %>
+  <%= turbo_stream.append "workout_exercises",
+    partial: "workout_sessions/exercise_card",
+    locals: { workout_exercise: @workout_exercise, profile: current_user.profile } %>
+<% else %>
+  <%= turbo_stream.replace dom_id(@workout_exercise),
+    partial: "workout_sessions/exercise_card",
+    locals: { workout_exercise: @workout_exercise, profile: current_user.profile } %>
+<% end %>
+
+<%= turbo_stream.update "modal", "" unless current_user.profile.continuous_add_exercises %>

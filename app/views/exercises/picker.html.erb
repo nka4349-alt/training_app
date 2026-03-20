@@ -1,0 +1,25 @@
+<turbo-frame id="modal">
+  <div style="position:fixed; inset:0; background:rgba(0,0,0,.35); display:flex; align-items:flex-end;">
+    <div style="background:#fff; width:100%; border-radius:16px 16px 0 0; padding:16px; max-height:82vh; overflow:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+        <strong><%= @replace_workout_exercise_id.present? ? "代替種目を選択" : "種目を追加（部位を選択）" %></strong>
+        <button type="button" data-action="modal#close">閉じる</button>
+      </div>
+
+      <p style="margin:8px 0 0; color:#666; font-size:12px;">種目名を入力せず、部位から1タップで追加できます。</p>
+
+      <div style="display:grid; gap:10px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top:12px;">
+        <% @body_parts.each do |bp| %>
+          <%= link_to Exercise::BODY_PART_LABELS[bp] || bp,
+              workout_session_exercises_by_body_part_path(
+                @workout_session,
+                bp,
+                replace_workout_exercise_id: @replace_workout_exercise_id
+              ),
+              data: { turbo_frame: "modal" },
+              style: "border:1px solid #ddd; border-radius:12px; padding:14px 12px; text-align:center; text-decoration:none; font-weight:600;" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</turbo-frame>

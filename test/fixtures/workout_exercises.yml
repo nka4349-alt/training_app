@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  workout_session: one
+  exercise: one
+  order_index: 1
+  target_sets: 1
+  rep_range_min: 1
+  rep_range_max: 1
+  rest_seconds: 1
+  recommended_next: 
+  note: MyText
+
+two:
+  workout_session: two
+  exercise: two
+  order_index: 1
+  target_sets: 1
+  rep_range_min: 1
+  rep_range_max: 1
+  rest_seconds: 1
+  recommended_next: 
+  note: MyText

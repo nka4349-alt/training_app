@@ -1,0 +1,77 @@
+<turbo-frame id="<%= dom_id(set_entry) %>">
+  <% if workout_exercise.workout_session.finished_at %>
+    <div style="display:flex; gap:8px; align-items:center; border:1px solid #eee; padding:8px; border-radius:10px;">
+      <div style="width:36px; font-weight:bold;"><%= set_entry.set_no %></div>
+      <div style="width:90px;">w: <%= set_entry.weight %></div>
+      <div style="width:70px;">r: <%= set_entry.reps %></div>
+      <div style="width:70px;">RPE: <%= set_entry.rpe %></div>
+      <div style="margin-left:auto;"><%= set_entry.status %></div>
+    </div>
+  <% else %>
+    <% done = set_entry.done? %>
+    <%= form_with model: set_entry,
+        url: set_entry_path(set_entry),
+        method: :patch,
+        data: {
+          controller: "set-row",
+          action: "change->set-row#submit",
+          "set-row-weight-step-value": profile.weight_step.to_f,
+          "set-row-rest-seconds-value": workout_exercise.rest_seconds.to_i,
+          "set-row-show-rpe-value": profile.show_rpe,
+          "set-row-session-id-value": workout_exercise.workout_session_id,
+          "set-row-set-entry-id-value": set_entry.id,
+          "set-row-auto-start-rest-timer-value": profile.auto_start_rest_timer,
+          "set-row-auto-focus-next-value": profile.auto_focus_next_done
+        },
+        style: "display:flex; gap:8px; align-items:center; border:1px solid #{done ? '#d3d3d3' : '#eee'}; padding:8px; border-radius:10px; background:#{done ? '#f7f7f7' : '#fff'};" do |f| %>
+
+      <div style="width:36px; font-weight:bold;"><%= set_entry.set_no %></div>
+      <%= f.hidden_field :status, data: { "set-row-target": "status" } %>
+
+      <button type="button" data-action="set-row#decWeight">-</button>
+      <%= f.number_field :weight,
+          step: profile.weight_step.to_f,
+          min: 0,
+          inputmode: "decimal",
+          data: { "set-row-target": "weight" },
+          style: "width:90px;" %>
+      <button type="button" data-action="set-row#incWeight">+</button>
+
+      <button type="button" data-action="set-row#decReps">-</button>
+      <%= f.number_field :reps,
+          step: 1,
+          min: 0,
+          inputmode: "numeric",
+          data: { "set-row-target": "reps" },
+          style: "width:70px;" %>
+      <button type="button" data-action="set-row#incReps">+</button>
+
+      <% if profile.show_rpe %>
+        <%= f.hidden_field :rpe, data: { "set-row-target": "rpe" } %>
+        <div style="display:flex; gap:4px;">
+          <% (6..10).each do |rpe| %>
+            <button type="button"
+                data-action="set-row#setRpe"
+                data-set-row-rpe-param="<%= rpe %>"
+                style="border:1px solid <%= set_entry.rpe.to_i == rpe ? '#333' : '#ddd' %>; border-radius:999px; padding:2px 6px; background:#fff; font-size:11px;">
+              <%= rpe %>
+            </button>
+          <% end %>
+        </div>
+      <% end %>
+
+      <label style="font-size:12px;">
+        <%= f.check_box :failed, data: { action: "change->set-row#submit" } %>
+        失敗
+      </label>
+
+      <button type="button"
+        data-action="set-row#toggleDone"
+        data-set-row-target="doneButton"
+        data-role="set-done-button"
+        style="margin-left:auto; padding:6px 10px; border-radius:10px; border:1px solid #333; background:<%= done ? '#222' : '#fff' %>; color:<%= done ? '#fff' : '#000' %>;">
+        <%= set_entry.done? ? "Undo" : "Done" %>
+      </button>
+    <% end %>
+  <% end %>
+</turbo-frame>

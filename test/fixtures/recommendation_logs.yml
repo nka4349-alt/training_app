@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  workout_exercise: one
+  input_snapshot: 
+  output: 
+  rationale: 
+
+two:
+  user: two
+  workout_exercise: two
+  input_snapshot: 
+  output: 
+  rationale: 

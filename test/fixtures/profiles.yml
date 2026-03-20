@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  goal: 1
+  experience: 1
+  frequency_per_week: 1
+  unit: 1
+  weight_step: 9.99
+  show_rpe: false
+  available_equipment: MyString
+
+two:
+  user: two
+  goal: 1
+  experience: 1
+  frequency_per_week: 1
+  unit: 1
+  weight_step: 9.99
+  show_rpe: false
+  available_equipment: MyString

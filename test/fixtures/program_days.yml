@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  program_template: one
+  label: MyString
+  day_index: 1
+  focus_body_parts: MyString
+
+two:
+  program_template: two
+  label: MyString
+  day_index: 1
+  focus_body_parts: MyString

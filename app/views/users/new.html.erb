@@ -1,0 +1,19 @@
+<h1>Sign Up</h1>
+
+<%= form_with model: @user do |f| %>
+  <div>
+    <%= f.label :email %><br>
+    <%= f.email_field :email %>
+  </div>
+  <div>
+    <%= f.label :password %><br>
+    <%= f.password_field :password %>
+  </div>
+  <div>
+    <%= f.label :password_confirmation %><br>
+    <%= f.password_field :password_confirmation %>
+  </div>
+  <%= f.submit "Create account" %>
+<% end %>
+
+<p><%= link_to "Login", new_session_path %></p>

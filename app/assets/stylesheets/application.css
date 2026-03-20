@@ -1,0 +1,200 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+:root {
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --ink: #111827;
+  --muted: #667085;
+  --line: #d0d5dd;
+  --brand: #0f766e;
+  --brand-soft: #e6fffa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(1100px 500px at 20% -15%, #d4f7ec 0, rgba(212, 247, 236, 0) 60%), var(--bg);
+  color: var(--ink);
+  font-family: "Avenir Next", "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+
+h1, h2, h3 {
+  margin: 0 0 8px;
+}
+
+.app-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 14px;
+}
+
+.app-main.with-tabbar {
+  padding-bottom: 86px;
+}
+
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  background: rgba(17, 24, 39, 0.96);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid #253041;
+}
+
+.tabbar-link {
+  padding: 10px 6px 12px;
+  color: #c8d2df;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tabbar-link.active {
+  color: #fff;
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.8), rgba(2, 6, 23, 0.9));
+}
+
+.screen-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.chip.active {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  color: #0b4e49;
+}
+
+button,
+input[type="submit"] {
+  cursor: pointer;
+  border: 1px solid #1f2937;
+  border-radius: 10px;
+  padding: 6px 10px;
+  background: #fff;
+}
+
+button:hover,
+input[type="submit"]:hover {
+  background: #f3f4f6;
+}
+
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px;
+  background: #fff;
+}
+
+a {
+  color: #0a4e9b;
+}
+
+/* mobile-optimized */
+body {
+  -webkit-text-size-adjust: 100%;
+}
+
+.app-main {
+  width: 100%;
+}
+
+.app-main.with-tabbar {
+  padding-bottom: calc(86px + env(safe-area-inset-bottom));
+}
+
+.tabbar {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tabbar-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
+
+button,
+input[type="submit"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select {
+  min-height: 44px;
+}
+
+@media (max-width: 640px) {
+  .app-main {
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 24px;
+    line-height: 1.3;
+  }
+
+  h2 {
+    font-size: 18px;
+    line-height: 1.35;
+  }
+
+  .screen-card {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  form[data-controller~="set-row"] {
+    flex-wrap: wrap;
+  }
+
+  form[data-controller~="set-row"] input[type="number"] {
+    width: 72px !important;
+  }
+
+  form[data-controller~="set-row"] [data-role="set-done-button"] {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+}

@@ -1,0 +1,16 @@
+<h1>Login</h1>
+<% if flash[:alert] %><p style="color:red;"><%= flash[:alert] %></p><% end %>
+
+<%= form_with url: session_path do %>
+  <div>
+    <label>Email</label><br>
+    <%= email_field_tag :email %>
+  </div>
+  <div>
+    <label>Password</label><br>
+    <%= password_field_tag :password %>
+  </div>
+  <%= submit_tag "Login" %>
+<% end %>
+
+<p><%= link_to "Sign Up", new_user_path %></p>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TrainingApp</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <main class="app-main <%= current_user ? 'with-tabbar' : '' %>">
+      <%= yield %>
+    </main>
+
+    <% if current_user %>
+      <% home_active = request.path == "/" %>
+      <% workout_active = request.path.start_with?("/workout") || request.path.start_with?("/workout_sessions") %>
+      <% progress_active = request.path.start_with?("/progress") %>
+      <% schedule_active = request.path.start_with?("/schedule") %>
+      <% settings_active = request.path.start_with?("/settings") || request.path.start_with?("/profile") %>
+
+      <nav class="tabbar">
+        <%= link_to "Home", root_path, class: "tabbar-link #{home_active ? 'active' : ''}" %>
+        <%= link_to "Workout", workout_path, class: "tabbar-link #{workout_active ? 'active' : ''}" %>
+        <%= link_to "Progress", progress_path, class: "tabbar-link #{progress_active ? 'active' : ''}" %>
+        <%= link_to "Schedule", schedule_path, class: "tabbar-link #{schedule_active ? 'active' : ''}" %>
+        <%= link_to "Settings", settings_path, class: "tabbar-link #{settings_active ? 'active' : ''}" %>
+      </nav>
+    <% end %>
+
+    <turbo-frame id="modal" data-controller="modal"></turbo-frame>
+  </body>
+</html>

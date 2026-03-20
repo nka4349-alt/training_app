@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  workout_session: one
+  body_part: MyString
+  severity: 1
+  note: MyText
+
+two:
+  workout_session: two
+  body_part: MyString
+  severity: 1
+  note: MyText

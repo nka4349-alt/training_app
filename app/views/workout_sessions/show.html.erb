@@ -1,0 +1,93 @@
+<div
+  data-controller="<%= [(@workout_session.finished_at.blank? ? 'workout-draft' : nil), 'toast', 'network'].compact.join(' ') %>"
+  <% if @workout_session.finished_at.blank? %>
+    data-workout-draft-session-id-value="<%= @workout_session.id %>"
+  <% end %>
+  style="padding-bottom:88px;">
+
+  <header
+    data-controller="session-timer"
+    data-session-timer-started-at-value="<%= @workout_session.started_at.iso8601 %>"
+    style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:12px;">
+    <div>
+      <h1 style="margin:0;">
+        <%= @workout_session.program_day&.label || "Workout" %>
+        <% if @workout_session.finished_at %>
+          <span style="font-size:12px; color:#666;">（完了済み）</span>
+        <% end %>
+      </h1>
+      <div style="font-size:12px; color:#666; margin-top:4px;">
+        経過: <span data-session-timer-target="time">00:00</span> ・
+        <span data-network-target="status">オンライン</span>
+      </div>
+    </div>
+
+    <% unless @workout_session.finished_at %>
+      <%= button_to "終了",
+          finish_workout_session_path(@workout_session),
+          method: :patch,
+          form: { data: { turbo_confirm: "このワークアウトを終了しますか？" } } %>
+    <% end %>
+  </header>
+
+  <% unless @workout_session.finished_at %>
+    <div style="display:flex; gap:10px; margin-bottom:12px;">
+      <%= link_to "＋種目追加",
+          workout_session_exercises_picker_path(@workout_session),
+          data: { turbo_frame: "modal" },
+          style: "padding:10px 12px; border:1px solid #333; border-radius:10px; text-decoration:none;" %>
+    </div>
+  <% end %>
+
+  <%= render "pain_panel", workout_session: @workout_session %>
+
+  <div id="workout_exercises" style="display:grid; gap:12px;">
+    <% @workout_session.workout_exercises.sort_by(&:order_index).each do |we| %>
+      <%= render "exercise_card", workout_exercise: we, profile: current_user.profile %>
+    <% end %>
+  </div>
+
+  <% if @workout_session.finished_at %>
+    <hr>
+    <h2>サマリ</h2>
+    <div>所要時間：<%= @workout_session.summary["duration_sec"] %> 秒</div>
+    <div>総ボリューム：<%= @workout_session.summary["total_volume"] %></div>
+
+    <h2>次回提案</h2>
+    <p style="font-size:12px; color:#666; margin-top:-6px;">提案値は次回セッション開始時にデフォルト反映されます。</p>
+    <% @workout_session.workout_exercises.each do |we| %>
+      <% rec = we.recommended_next %>
+      <div style="border:1px solid #eee; padding:10px; border-radius:10px; margin:8px 0;">
+        <strong><%= we.exercise.name %></strong><br>
+        次回：<%= rec["weight"] %> / <%= rec["reps_target"] %>回 × <%= rec["sets"] %>セット
+        <div style="font-size:12px; color:#666; margin-top:6px;">
+          <% Array(rec["rationale"]).each do |r| %>
+            <div>・<%= r["message"] %></div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div
+    data-controller="rest-timer"
+    data-rest-timer-target="panel"
+    style="position:fixed; left:0; right:0; bottom:56px; background:#111; color:#fff; padding:10px 14px; display:none; justify-content:center; align-items:center; gap:8px; z-index:20;">
+    <span style="font-size:12px; opacity:.8;">休憩</span>
+    <strong data-rest-timer-target="time" style="min-width:46px; text-align:center;">--:--</strong>
+    <button data-action="rest-timer#add15" type="button">+15</button>
+    <button data-action="rest-timer#sub15" type="button">-15</button>
+    <button data-action="rest-timer#skip" type="button">skip</button>
+    <button data-action="rest-timer#focusNext" type="button">次へ</button>
+  </div>
+
+  <div data-toast-target="container" style="position:fixed; right:12px; bottom:120px; display:grid; gap:8px; z-index:30;"></div>
+
+  <% if @workout_session.finished_at.present? %>
+    <script>
+      Object.keys(localStorage)
+        .filter((key) => key.startsWith("training-app:draft:<%= @workout_session.id %>:"))
+        .forEach((key) => localStorage.removeItem(key))
+    </script>
+  <% end %>
+</div>
