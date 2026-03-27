@@ -29,4 +29,5 @@ Rails.application.routes.draw do
   get "/progress", to: "progress#show"
   get "/meal_ideas", to: "meal_ideas#show"
   get "/privacy", to: "public_pages#privacy"
+  get "/delete-account", to: "public_pages#delete_account"
 end
