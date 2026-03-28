@@ -47,17 +47,11 @@
       <button type="button" data-action="set-row#incReps">+</button>
 
       <% if profile.show_rpe %>
-        <%= f.hidden_field :rpe, data: { "set-row-target": "rpe" } %>
-        <div style="display:flex; gap:4px;">
-          <% (6..10).each do |rpe| %>
-            <button type="button"
-                data-action="set-row#setRpe"
-                data-set-row-rpe-param="<%= rpe %>"
-                style="border:1px solid <%= set_entry.rpe.to_i == rpe ? '#333' : '#ddd' %>; border-radius:999px; padding:2px 6px; background:#fff; font-size:11px;">
-              <%= rpe %>
-            </button>
-          <% end %>
-        </div>
+        <%= f.select :rpe,
+            options_for_select([["RPE", ""]] + (6..10).map { |rpe| [rpe, rpe] }, set_entry.rpe),
+            {},
+            data: { "set-row-target": "rpe" },
+            style: "width:72px;" %>
       <% end %>
 
       <label style="font-size:12px;">
