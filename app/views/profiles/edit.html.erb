@@ -100,4 +100,11 @@
       <%= button_to "Logout", session_path, method: :delete %>
     <% end %>
   </div>
+
+  <% unless @onboarding %>
+    <section class="screen-card" style="display:grid; gap:8px; margin-top:12px;">
+      <%= link_to "プライバシーポリシー", "/privacy" %>
+      <%= link_to "アカウント削除", "/delete-account" %>
+    </section>
+  <% end %>
 <% end %>
