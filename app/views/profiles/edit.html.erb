@@ -1,6 +1,9 @@
 <h1><%= @onboarding ? "プロフィール設定" : "Settings" %></h1>
 
-<%= form_with model: @profile, url: profile_path, method: :patch do |f| %>
+<%= form_with model: @profile,
+    url: profile_path,
+    method: :patch,
+    data: { controller: "settings-chips", action: "change->settings-chips#sync" } do |f| %>
   <% if @onboarding %>
     <%= hidden_field_tag :complete_onboarding, "1" %>
   <% end %>

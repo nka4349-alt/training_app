@@ -96,6 +96,8 @@ h1, h2, h3 {
   background: #fff;
   padding: 6px 10px;
   font-size: 12px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .chip.active {
