@@ -99,15 +99,16 @@
 
   <div style="display:flex; gap:8px; margin-top:14px;">
     <%= f.submit(@onboarding ? "開始" : "保存") %>
-    <% unless @onboarding %>
-      <%= button_to "Logout", session_path, method: :delete %>
-    <% end %>
+  </div>
+<% end %>
+
+<% unless @onboarding %>
+  <div style="display:flex; gap:8px; margin-top:12px;">
+    <%= button_to "Logout", session_path, method: :delete %>
   </div>
 
-  <% unless @onboarding %>
-    <section class="screen-card" style="display:grid; gap:8px; margin-top:12px;">
-      <%= link_to "プライバシーポリシー", "/privacy" %>
-      <%= link_to "アカウント削除", "/delete-account" %>
-    </section>
-  <% end %>
+  <section class="screen-card" style="display:grid; gap:8px; margin-top:12px;">
+    <%= link_to "プライバシーポリシー", "/privacy" %>
+    <%= link_to "アカウント削除", "/delete-account" %>
+  </section>
 <% end %>
